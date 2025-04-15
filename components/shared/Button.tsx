@@ -11,12 +11,14 @@ type Props = {
 };
 
 const Button = ({variant, type, color, customStyle, link, text}: Props) => {
-    let style = `${customStyle} text-sm font-semibold flex items-center justify-center w-full py-2 px-[26px]`;
+    let style = `${customStyle} text-sm font-semibold flex items-center justify-center w-full py-2 px-[26px] rounded-[50px]`;
 
-    if(variant === 'primary'){}
+    if(variant === 'primary'){
+        style += ` bg-primary-custom text-white`;
+    }
 
     if(variant === 'outline'){
-        style += ` border-2 rounded-[50px] ${color === 'white' ? 'border-white text-white' : 'border-primary text-primary'}`;
+        style += ` border-2  ${color === 'white' ? 'border-white text-white' : 'border-primary text-primary'}`;
     }
 
     return (

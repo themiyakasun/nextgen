@@ -48,7 +48,7 @@
   --color-primary-custom: var(--color-primary-custom);
   --color-secondary-custom: var(--color-secondary-custom);
   --color-tertiary: var(--color-tertiary);
-  --color-accent: var(--color-accent-1);
+  --color-accent-1: var(--color-accent-1);
 }
 
 @layer base {
