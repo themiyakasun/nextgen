@@ -65,6 +65,14 @@
   .navbar-container {
     @apply flex px-5 py-2 md:px-16 bg-primary-custom md:bg-white items-center justify-between relative flex-wrap;
   }
+
+  .main-title {
+    @apply font-semibold md:text-[32px] text-lg;
+  }
+
+  .sub-title {
+    @apply font-semibold md:text-lg text-sm;
+  }
 }
 
 @theme inline {

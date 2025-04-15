@@ -6,7 +6,7 @@ const Layout = async ({ children }: { children: ReactNode })=> {
     return (
         <>
             <Navbar/>
-            <main className='root-container'>{children}</main>
+            <main className='root-container md:py-5 py-2'>{children}</main>
             <Footer/>
         </>
     )
