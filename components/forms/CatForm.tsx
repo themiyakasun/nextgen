@@ -17,6 +17,7 @@ import Button from '@/components/shared/Button';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { categorySchema } from '@/lib/validation';
+import ImageUpload from '../ImageUpload';
 
 interface Props {
   type: 'create' | 'edit';
@@ -65,6 +66,21 @@ const CatForm = ({ type }: Props) => {
                     {...field}
                     className='!md:h-[50px] !h-10 md:text-sm text-sm rounded-[5px] border-secondary-custom'
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={'image'}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='md:text-[13px] text-[11px] font-semibold'>
+                  Image
+                </FormLabel>
+                <FormControl>
+                  <ImageUpload onFileChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
