@@ -8,6 +8,9 @@
   --color-secondary-custom: #A2A6B0;
   --color-tertiary: #666;
   --color-accent-1: #F5F7FF;
+  --color-neutral-custom--800: #454545;
+  --color-neutral-custom--400: #888;
+  --color-cerulean-blue-100: #D9EDFF;
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -49,6 +52,9 @@
   --color-secondary-custom: var(--color-secondary-custom);
   --color-tertiary: var(--color-tertiary);
   --color-accent-1: var(--color-accent-1);
+  --color-neutral-custom-800: var(--color-neutral-custom--800);
+  --color-neutral-custom-400: var(--color-neutral-custom--400);
+  --color-cerulean-blue-100: var(--color-cerulean-blue-100);
 }
 
 @layer base {
@@ -159,4 +165,16 @@
 
   }
 
+}
+
+.sidebar {
+  transition: left .4s, background-color .4s, width .4s;
+
+  h3 {
+    @apply text-sm text-[#727272];
+  }
+}
+
+.w-content {
+  width: max-content;
 }

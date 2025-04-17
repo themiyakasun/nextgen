@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
+import { SidebarStoreProvider } from "@/providers/SidebarStoreProvider";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
@@ -9,6 +11,6 @@ const Layout = async ({ children }: { children: ReactNode }) => {
 
   if (session.user?.role === "USER") redirect("/");
 
-  return <div>{children}</div>;
+  return <SidebarStoreProvider>{children}</SidebarStoreProvider>;
 };
 export default Layout;
