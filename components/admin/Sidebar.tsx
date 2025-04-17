@@ -11,6 +11,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 
 import { useSidebarStore } from "@/providers/SidebarStoreProvider";
 
@@ -51,14 +52,30 @@ const Sidebar = () => {
               </Link>
             </li>
             <li className="w-full">
-              <button className="group hover:bg-cerulean-blue-100 w-full flex items-center gap-2 p-2 rounded-[12px]">
+              <Link
+                href="/dashboard/products"
+                className="group hover:bg-cerulean-blue-100 w-full flex items-center gap-2 p-2 rounded-[12px]"
+              >
                 <StorefrontIcon className="text-2xl text-neutral-custom-400 group-hover:text-neutral-custom-800" />
                 <span
                   className={`${sidebarShrink ? "hidden" : "block"} text-sm text-neutral-custom-400 group-hover:font-bold group-hover:text-neutral-custom-800`}
                 >
                   Products
                 </span>
-              </button>
+              </Link>
+            </li>
+            <li className="w-full">
+              <Link
+                href="/dashboard/categories"
+                className="group hover:bg-cerulean-blue-100 w-full flex items-center gap-2 p-2 rounded-[12px]"
+              >
+                <CategoryOutlinedIcon className="text-2xl text-neutral-custom-400 group-hover:text-neutral-custom-800" />
+                <span
+                  className={`${sidebarShrink ? "hidden" : "block"} text-sm text-neutral-custom-400 group-hover:font-bold group-hover:text-neutral-custom-800`}
+                >
+                  Categories
+                </span>
+              </Link>
             </li>
             <li className="w-full">
               <Link

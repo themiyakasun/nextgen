@@ -10,7 +10,10 @@
   --color-accent-1: #F5F7FF;
   --color-neutral-custom--800: #454545;
   --color-neutral-custom--400: #888;
+  --color-neutral-custom--300: #B0B0B0;
+  --color-neutral-custom-100: #E7E7E7;
   --color-cerulean-blue-100: #D9EDFF;
+
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -54,6 +57,8 @@
   --color-accent-1: var(--color-accent-1);
   --color-neutral-custom-800: var(--color-neutral-custom--800);
   --color-neutral-custom-400: var(--color-neutral-custom--400);
+  --color-neutral-custom-300: var(--color-neutral-custom--300);
+  --color-neutral-custom-100: var(--color-neutral-custom-100);
   --color-cerulean-blue-100: var(--color-cerulean-blue-100);
 }
 
@@ -177,4 +182,12 @@
 
 .w-content {
   width: max-content;
+}
+
+.main-container {
+  @apply mt-16 md:ml-[280px] p-5 md:p-8;
+}
+
+.shrink {
+  @apply md:ml-28;
 }

@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import { Session } from "next-auth";
+import Image from "next/image";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useSidebarStore } from "@/providers/SidebarStoreProvider";
 
-const Header = () => {
+const Header = ({ session }: { session: Session | null }) => {
   const {
     showSidebar,
     sidebarVisibility,
@@ -21,9 +23,20 @@ const Header = () => {
     >
       <div className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center justify-center gap-5 md:order-1">
-          <div className="w-10 h-9 border border-black rounded-md"></div>
+          <div className="w-10 h-9 border border-black rounded-md">
+            {session?.user?.image && (
+              <Image
+                src={session?.user?.image as string}
+                alt={session?.user?.name as string}
+                width={40}
+                height={36}
+              />
+            )}
+          </div>
           <div>
-            <h3 className="capitalize text-sm leading-2"></h3>
+            <h3 className="capitalize text-sm leading-2">
+              {session?.user?.name}
+            </h3>
             <span className="text-xs text-secondary-custom leading-0">
               Admin
             </span>
