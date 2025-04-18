@@ -36,6 +36,55 @@
       "when": 1744802186665,
       "tag": "0004_sticky_blacklash",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1744963145052,
+      "tag": "0005_goofy_gambit",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1744964845144,
+      "tag": "0006_cloudy_falcon",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1744969786610,
+      "tag": "0007_charming_komodo",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1744971149258,
+      "tag": "0008_living_dragon_lord",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1744972878905,
+      "tag": "0009_spooky_silverclaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1744973214455,
+      "tag": "0010_third_naoko",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1744973313605,
+      "tag": "0011_glorious_sinister_six",
+      "breakpoints": true
     }
   ]
 }

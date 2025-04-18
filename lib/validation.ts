@@ -16,11 +16,13 @@ export const categorySchema = z.object({
   image: z.string().min(3),
 });
 
-export const branchSchema = z.object({
+export const brandSchema = z.object({
   brand: z.string().min(3),
+  logo: z.string().min(3),
 });
 
 export const seriesSchema = z.object({
   seriesName: z.string().min(3),
-  category: z.string().min(3),
+  categoryId: z.string().min(3),
+  brandId: z.string().min(3),
 });

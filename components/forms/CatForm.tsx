@@ -18,12 +18,15 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { categorySchema } from '@/lib/validation';
 import ImageUpload from '../ImageUpload';
+import { addCategory } from '@/lib/actions/category';
 
 interface Props {
   type: 'create' | 'edit';
 }
 
 const CatForm = ({ type }: Props) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
@@ -31,12 +34,17 @@ const CatForm = ({ type }: Props) => {
       image: '',
     },
   });
-  const router = useRouter();
 
   const isCreate = type === 'create';
 
   const onSubmit = async (values: z.infer<typeof categorySchema>) => {
-    console.log(values);
+    const result = await addCategory(values);
+
+    if (result.error) {
+      toast.error(result.error);
+    }
+
+    toast.success('Category added successfully');
   };
 
   return (

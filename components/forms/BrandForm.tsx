@@ -16,25 +16,34 @@ import { Input } from '@/components/ui/input';
 import Button from '@/components/shared/Button';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { branchSchema } from '@/lib/validation';
+import { brandSchema } from '@/lib/validation';
+import { addBrand } from '@/lib/actions/brand';
+import ImageUpload from '../ImageUpload';
 
 interface Props {
   type: 'create' | 'edit';
 }
 
 const BrandForm = ({ type }: Props) => {
-  const form = useForm<z.infer<typeof branchSchema>>({
-    resolver: zodResolver(branchSchema),
+  const form = useForm<z.infer<typeof brandSchema>>({
+    resolver: zodResolver(brandSchema),
     defaultValues: {
       brand: '',
+      logo: '',
     },
   });
   const router = useRouter();
 
   const isCreate = type === 'create';
 
-  const onSubmit = async (values: z.infer<typeof branchSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof brandSchema>) => {
+    const result = await addBrand(values);
+
+    if (result.error) {
+      toast.error(result.error);
+    }
+
+    toast.success('Brand added successfully');
   };
 
   return (
@@ -64,6 +73,22 @@ const BrandForm = ({ type }: Props) => {
                     {...field}
                     className='!md:h-[50px] !h-10 md:text-sm text-sm rounded-[5px] border-secondary-custom'
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={'logo'}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='md:text-[13px] text-[11px] font-semibold'>
+                  Logo
+                </FormLabel>
+                <FormControl>
+                  <ImageUpload onFileChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
