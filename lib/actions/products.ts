@@ -11,7 +11,6 @@ import {
   productSpecifications,
 } from '@/database/schema';
 import { eq } from 'drizzle-orm';
-import { error } from 'console';
 import { db } from '@/database/drizzle';
 
 type NewProduct = z.infer<typeof productSchema>;
@@ -29,7 +28,6 @@ export const addProduct = async (params: NewProduct) => {
     isActive,
     categoryId,
     brandId,
-    seriesId,
     images,
     specs,
   } = params;
@@ -71,23 +69,26 @@ export const addProduct = async (params: NewProduct) => {
     if (productResult[0].id) {
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
-        const spec = specs[i];
 
         await db.insert(productImages).values({
           productId: productResult[0].id,
           image: image,
           isPrimary: i === 0,
         });
-
-        await db.insert(productSpecifications).values({
-          specName: spec.name,
-          specValue: spec.value,
-          productId: productResult[0].id,
-        });
       }
+
+      await Promise.all(
+        specs.map((spec) =>
+          db.insert(productSpecifications).values({
+            specName: spec.name,
+            specValue: spec.value,
+            productId: productResult[0].id,
+          })
+        )
+      );
     }
 
-    console.log(productResult);
+    return { success: true };
   } catch (error) {
     console.log(error);
     return { success: false, error: 'Product adding error' };

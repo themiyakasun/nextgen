@@ -116,6 +116,13 @@ const ProductForm = ({ type }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof productSchema>) => {
     const result = await addProduct(values);
+
+    if (result.error) {
+      toast.error(result.error);
+    }
+
+    toast.success('Product added successfully');
+    router.push('/dashboard/products');
   };
 
   return (

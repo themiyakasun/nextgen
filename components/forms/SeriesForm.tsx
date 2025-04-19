@@ -85,7 +85,7 @@ const SeriesForm = ({ type }: Props) => {
   };
 
   return (
-    <div className='bg-white md:p-10 p-5 rounded-3xl mt-5 md:mt-0'>
+    <div className='bg-white md:p-10 p-5 rounded-3xl mt-5'>
       <h2 className='sub-title'>Series Information</h2>
       <p className='md:text-sm text-xs font-light py-5 text-neutral-custom-300'>
         Please provide your Series information

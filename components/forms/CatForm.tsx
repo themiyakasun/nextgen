@@ -48,7 +48,7 @@ const CatForm = ({ type }: Props) => {
   };
 
   return (
-    <div className='bg-white md:p-10 p-5 rounded-3xl'>
+    <div className='bg-white md:p-10 p-5 rounded-3xl md:w-1/2'>
       <h2 className='sub-title'>Category Information</h2>
       <p className='md:text-sm text-xs font-light py-5 text-neutral-custom-300'>
         Please provide your category information
