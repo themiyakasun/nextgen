@@ -21,5 +21,31 @@ interface Series {
   seriesName: string;
   categoryId: string;
   brandId: string;
-  createdAt: string;
+  createdAt: Date | null;
+}
+
+interface Product {
+  id: string;
+  sku: string;
+  name: string;
+  description: string;
+  modelNumber: string;
+  price: number;
+  discount: number;
+  stockQuantity: number;
+  warrantyPeriod: string;
+  isFeatured: boolean;
+  isActive: boolean;
+  createAt: Date;
+  updatedAt: Date;
+  categoryId: string;
+  brandId: string;
+  seriesId: string;
+}
+
+interface ProductImage {
+  id: string;
+  productId: string;
+  image: string;
+  isPrimary;
 }

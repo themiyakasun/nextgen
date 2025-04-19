@@ -29,32 +29,38 @@ const authenticator = async () => {
   }
 };
 
-const ImageUpload = ({
+const ProductImageUpload = ({
   onFileChange,
-  value,
+  value = [],
 }: {
-  onFileChange: (filePath: string) => void;
-  value?: string;
+  onFileChange: (urls: string[]) => void;
+  value?: string[];
 }) => {
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filePath: string } | null>(null);
+  const [files, setFiles] = useState<string[]>([]);
 
   useEffect(() => {
-    if (value) {
-      setFile({ filePath: value });
+    if (value.length > 0) {
+      setFiles(value);
     }
   }, [value]);
 
   const onError = (error: any) => {
-    console.log(error);
+    console.error(error);
     toast.error('Image upload failed');
   };
 
   const onSuccess = (res: any) => {
-    setFile(res);
-    onFileChange(res.filePath);
-
+    const newFiles = [...files, res.filePath];
+    setFiles(newFiles);
+    onFileChange(newFiles);
     toast.success('Image uploaded successfully');
+  };
+
+  const removeImage = (index: number) => {
+    const updated = files.filter((_, i) => i !== index);
+    setFiles(updated);
+    onFileChange(updated);
   };
 
   return (
@@ -72,11 +78,8 @@ const ImageUpload = ({
       <button
         onClick={(e) => {
           e.preventDefault();
-
-          if (ikUploadRef.current) {
-            //@ts-ignore
-            ikUploadRef.current?.click();
-          }
+          //@ts-ignore
+          ikUploadRef.current?.click();
         }}
         className={cn(
           'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
@@ -85,19 +88,30 @@ const ImageUpload = ({
         )}
       >
         <FilePresentOutlinedIcon className='text-muted-foreground' />
-        <span className='text-muted-foreground text-sm'>Upload a image</span>
+        <span className='text-muted-foreground text-sm'>Upload images</span>
       </button>
 
-      {file && (
-        <IKImage
-          alt={file.filePath}
-          path={file.filePath}
-          width={500}
-          height={500}
-        />
-      )}
+      <div className='flex flex-wrap gap-2 mt-4'>
+        {files.map((file, index) => (
+          <div key={index} className='relative'>
+            <IKImage
+              alt={`uploaded-${index}`}
+              path={file}
+              width={100}
+              height={100}
+              className='rounded border'
+            />
+            <button
+              onClick={() => removeImage(index)}
+              className='absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full p-1'
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
     </ImageKitProvider>
   );
 };
 
-export default ImageUpload;
+export default ProductImageUpload;

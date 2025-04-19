@@ -41,3 +41,17 @@ export const addSeries = async (
     return { success: false, error: 'Series adding error' };
   }
 };
+
+export const getSeries = async () => {
+  try {
+    const allSeries = await db.select().from(series);
+
+    if (allSeries.length === 0) {
+      return { success: false, error: ' No category available' };
+    }
+
+    return { success: true, data: allSeries };
+  } catch (error) {
+    console.log(error);
+  }
+};
