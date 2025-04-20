@@ -108,7 +108,8 @@ export const getProducts = async ({
       .select()
       .from(products)
       .limit(pageSize)
-      .offset((page - 1) * pageSize);
+      .offset((page - 1) * pageSize)
+      .orderBy(products.createdAt);
 
     const productIds = productsResult.map((productResult) => productResult.id);
 

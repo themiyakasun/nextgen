@@ -184,3 +184,12 @@ export const productImages = pgTable('product_images', {
   image: text('image').notNull(),
   isPrimary: boolean('is_primary').default(true),
 });
+
+export const productReviews = pgTable('product_reviews', {
+  id: uuid('id').primaryKey().notNull().defaultRandom().unique(),
+  userId: text('user_id')
+    .references(() => users.id)
+    .notNull(),
+  productId: uuid('product_id').references(() => products.id),
+  review: integer('review').default(0).notNull(),
+});

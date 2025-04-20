@@ -85,6 +85,20 @@
       "when": 1744973313605,
       "tag": "0011_glorious_sinister_six",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1745188169863,
+      "tag": "0012_perpetual_rage",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1745188214087,
+      "tag": "0013_curly_meteorite",
+      "breakpoints": true
     }
   ]
 }

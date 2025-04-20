@@ -1,9 +1,11 @@
-import React from "react";
+import React from 'react';
+
+import NewProducts from '@/components/NewProducts';
 
 const Home = () => {
   return (
     <div>
-      <h1 className="text-primary">This is root</h1>
+      <NewProducts />
     </div>
   );
 };
