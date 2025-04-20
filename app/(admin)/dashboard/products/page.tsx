@@ -25,7 +25,11 @@ const Page = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const result = (await getProducts()) as ProductDetails[];
+      const result = (await getProducts({
+        page: 1,
+        pageSize: 10,
+      })) as ProductDetails[];
+      console.log(result);
 
       if (result) {
         setProductDetails(result);
@@ -34,8 +38,6 @@ const Page = () => {
 
     fetchProducts();
   }, []);
-
-  console.log(productsDetails);
 
   return (
     <MainContent>
@@ -90,14 +92,20 @@ const Page = () => {
               <tr key={product.id}>
                 <td>
                   <div className='flex items-center gap-2'>
-                    <IKImage
-                      urlEndpoint={config.env.imageKit.urlEndpoint}
-                      path={product.images[0].image}
-                      alt={product.name}
-                      width={42}
-                      height={42}
-                      className='rounded-[6px]'
-                    />
+                    {product.images.map((image) => (
+                      <div key={image.id}>
+                        {image.isPrimary && (
+                          <IKImage
+                            urlEndpoint={config.env.imageKit.urlEndpoint}
+                            path={image.image}
+                            alt={product.name}
+                            width={42}
+                            height={42}
+                            className='rounded-[6px]'
+                          />
+                        )}
+                      </div>
+                    ))}
                     <div>
                       <span className='text-blue-500 text-xs'>
                         {product.sku}

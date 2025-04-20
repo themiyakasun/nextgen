@@ -41,10 +41,18 @@ interface ProductDetails {
   categoryId: string;
   brandId: string;
   seriesId: string;
-  specs: [
-    { id: string; specName: string; specValue: string; productId: string },
-  ];
-  images: [{ id: string; image: string; productId: string }];
+  specs: {
+    id: string;
+    specName: string;
+    specValue: string;
+    productId: string;
+  }[];
+  images: {
+    id: string;
+    image: string;
+    productId: string;
+    isPrimary: boolean | null;
+  }[];
   brand: {
     id: string;
     brand: string;
