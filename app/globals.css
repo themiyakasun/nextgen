@@ -204,11 +204,15 @@
   }
 
   th {
-    @apply text-left bg-neutral-custom-100 first:rounded-tl-2xl last:rounded-tr-2xl first:table-cell hidden md:table-cell;
+    @apply text-left bg-neutral-custom-100 first:rounded-tl-2xl first:rounded-tr-2xl md:first:rounded-tr-none last:rounded-tr-2xl first:table-cell hidden md:table-cell;
   }
 
   td {
     @apply first:block grid grid-cols-[15ch_auto] md:table-cell text-sm;
+  }
+
+  tbody tr {
+    @apply border-2
   }
 
 

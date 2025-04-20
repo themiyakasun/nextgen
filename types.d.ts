@@ -24,7 +24,7 @@ interface Series {
   createdAt: Date | null;
 }
 
-interface Product {
+interface ProductDetails {
   id: string;
   sku: string;
   name: string;
@@ -36,11 +36,20 @@ interface Product {
   warrantyPeriod: string;
   isFeatured: boolean;
   isActive: boolean;
-  createAt: Date;
+  createdAt: Date;
   updatedAt: Date;
   categoryId: string;
   brandId: string;
   seriesId: string;
+  specs: [
+    { id: string; specName: string; specValue: string; productId: string },
+  ];
+  images: [{ id: string; image: string; productId: string }];
+  brand: {
+    id: string;
+    brand: string;
+    logo: string;
+  };
 }
 
 interface ProductImage {

@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import MainContent from '@/components/admin/MainContent';
@@ -12,8 +14,29 @@ import StatusButton from '@/components/shared/StatusButton';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { getProducts } from '@/lib/actions/products';
+import { IKImage } from 'imagekitio-next';
+import config from '@/config';
 
 const Page = () => {
+  const [productsDetails, setProductDetails] = useState<
+    ProductDetails[] | null
+  >(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const result = (await getProducts()) as ProductDetails[];
+
+      if (result) {
+        setProductDetails(result);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  console.log(productsDetails);
+
   return (
     <MainContent>
       <div className='bg-white md:border-2 border border-neutral-custom-100 rounded-3xl w-full p-4 md:p-6 flex flex-col gap-5'>
@@ -55,6 +78,7 @@ const Page = () => {
               <th>Product</th>
               <th>Price</th>
               <th>Brand</th>
+              <th>Model Number</th>
               <th>QTY</th>
               <th>Date</th>
               <th>Status</th>
@@ -62,44 +86,62 @@ const Page = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <div className='flex items-center gap-2'>
-                  <Image
-                    src='/images/temp.png'
-                    alt='image'
-                    width={42}
-                    height={42}
-                    className='rounded-[6px]'
-                  />
-                  <div>
-                    <span className='text-blue-500 text-xs'>132389</span>
-                    <p className='text-sm'>product name</p>
+            {productsDetails?.map((product) => (
+              <tr key={product.id}>
+                <td>
+                  <div className='flex items-center gap-2'>
+                    <IKImage
+                      urlEndpoint={config.env.imageKit.urlEndpoint}
+                      path={product.images[0].image}
+                      alt={product.name}
+                      width={42}
+                      height={42}
+                      className='rounded-[6px]'
+                    />
+                    <div>
+                      <span className='text-blue-500 text-xs'>
+                        {product.sku}
+                      </span>
+                      <p className='text-sm'>{product.name}</p>
+                    </div>
                   </div>
-                </div>
-              </td>
+                </td>
 
-              <td data-cell='price'>Rs. 50, 0000</td>
-              <td data-cell='brand'>MSI</td>
-              <td data-cell='QTY'>20</td>
-              <td data-cell='date'>04/17/23 at 8:25 PM</td>
-              <td data-cell='status'>
-                <StatusButton active={true} text='Active' />
-              </td>
-              <td data-cell='action'>
-                <div className='flex items-center gap-2'>
-                  <button>
-                    <VisibilityOutlinedIcon />
-                  </button>
-                  <button>
-                    <EditNoteOutlinedIcon />
-                  </button>
-                  <button>
-                    <DeleteOutlineOutlinedIcon />
-                  </button>
-                </div>
-              </td>
-            </tr>
+                <td data-cell='price'>Rs. {product.price.toLocaleString()}</td>
+                <td data-cell='brand'>{product.brand.brand}</td>
+                <td data-cell='model number'>{product.modelNumber}</td>
+                <td data-cell='QTY'>{product.stockQuantity}</td>
+                <td data-cell='date'>
+                  {new Date(String(product.createdAt)).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </td>
+                <td data-cell='status'>
+                  {product.isActive ? (
+                    <StatusButton active={true} text='Available' />
+                  ) : (
+                    <StatusButton active={false} text='Out of Stock' />
+                  )}
+                </td>
+                <td data-cell='action'>
+                  <div className='flex items-center gap-2'>
+                    <button>
+                      <VisibilityOutlinedIcon className='text-neutral-custom-500' />
+                    </button>
+                    <button>
+                      <EditNoteOutlinedIcon className='text-neutral-custom-500' />
+                    </button>
+                    <button>
+                      <DeleteOutlineOutlinedIcon className='text-neutral-custom-500' />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

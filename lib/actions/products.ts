@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import ratelimit from '../ratelimit';
 import { redirect } from 'next/navigation';
 import {
+  brands,
   productImages,
   products,
   productSpecifications,
@@ -92,5 +93,61 @@ export const addProduct = async (params: NewProduct) => {
   } catch (error) {
     console.log(error);
     return { success: false, error: 'Product adding error' };
+  }
+};
+
+export const getProducts = async () => {
+  try {
+    const productsResult = await db
+      .select({
+        products: products,
+        image: productImages,
+        spec: productSpecifications,
+        brand: brands,
+      })
+      .from(products)
+      .leftJoin(productImages, eq(products.id, productImages.productId))
+      .leftJoin(
+        productSpecifications,
+        eq(products.id, productSpecifications.productId)
+      )
+      .leftJoin(brands, eq(products.brandId, brands.id));
+
+    const grouped = productsResult.reduce((acc, row) => {
+      const productId = row.products.id;
+
+      if (!acc[productId]) {
+        acc[productId] = {
+          ...row.products,
+          brand: row.brand ?? null,
+          images: [],
+          specs: [],
+        };
+      }
+
+      if (
+        row.image?.id &&
+        !acc[productId].images.some(
+          (img: { id: string }) => img.id === row.image?.id
+        )
+      ) {
+        acc[productId].images.push(row.image);
+      }
+
+      if (
+        row.spec?.id &&
+        !acc[productId].specs.some(
+          (spec: { id: string }) => spec.id === row.spec?.id
+        )
+      ) {
+        acc[productId].specs.push(row.spec);
+      }
+
+      return acc;
+    }, {});
+
+    return Object.values(grouped);
+  } catch (error) {
+    console.log(error);
   }
 };
