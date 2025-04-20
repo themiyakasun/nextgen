@@ -1,35 +1,48 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { IKImage } from 'imagekitio-next';
 
 import MainContent from '@/components/admin/MainContent';
 import { Input } from '@/components/ui/input';
 import Button from '@/components/shared/Button';
+import StatusButton from '@/components/shared/StatusButton';
+import { getProducts, getTotalCountofProducts } from '@/lib/actions/products';
+import config from '@/config';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import StatusButton from '@/components/shared/StatusButton';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { getProducts } from '@/lib/actions/products';
-import { IKImage } from 'imagekitio-next';
-import config from '@/config';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 
 const Page = () => {
+  const [productTotal, setProductTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [productsDetails, setProductDetails] = useState<
     ProductDetails[] | null
   >(null);
 
   useEffect(() => {
+    const fetchTotal = async () => {
+      const total = await getTotalCountofProducts();
+      setProductTotal(total[0].count);
+    };
+    fetchTotal();
+  }, []);
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(productTotal / pageSize);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       const result = (await getProducts({
-        page: 1,
-        pageSize: 10,
+        page: currentPage,
+        pageSize: pageSize,
       })) as ProductDetails[];
-      console.log(result);
 
       if (result) {
         setProductDetails(result);
@@ -37,7 +50,21 @@ const Page = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [currentPage]);
+
+  const incrementPages = () => {
+    if (currentPage !== totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const decrementPages = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  console.log(currentPage);
 
   return (
     <MainContent>
@@ -152,6 +179,26 @@ const Page = () => {
             ))}
           </tbody>
         </table>
+
+        <div className='flex justify-between items-center text-sm'>
+          <div>
+            <span className='text-blue-500'>{currentPage}</span> of {totalPages}
+          </div>
+          <div className='flex gap-2'>
+            <button
+              className=' border border-secondary-custom w-7 h-7 rounded-md'
+              onClick={() => decrementPages}
+            >
+              <ArrowBackIosNewOutlinedIcon />
+            </button>
+            <button
+              className=' border border-secondary-custom w-7 h-7 rounded-md'
+              onClick={() => incrementPages}
+            >
+              <ArrowForwardIosOutlinedIcon />
+            </button>
+          </div>
+        </div>
       </div>
     </MainContent>
   );

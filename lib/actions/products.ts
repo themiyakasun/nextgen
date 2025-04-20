@@ -11,7 +11,7 @@ import {
   products,
   productSpecifications,
 } from '@/database/schema';
-import { eq, inArray } from 'drizzle-orm';
+import { count, eq, inArray } from 'drizzle-orm';
 import { db } from '@/database/drizzle';
 
 type NewProduct = z.infer<typeof productSchema>;
@@ -148,4 +148,9 @@ export const getProducts = async ({
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getTotalCountofProducts = async () => {
+  const result = await db.select({ count: count() }).from(products);
+  return result;
 };
