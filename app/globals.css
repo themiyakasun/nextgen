@@ -9,6 +9,7 @@
   --color-tertiary: #666;
   --color-accent-1: #F5F7FF;
   --color-neutral-custom--800: #454545;
+  --color-neutral-custom-500: #737373;
   --color-neutral-custom--400: #888;
   --color-neutral-custom--300: #B0B0B0;
   --color-neutral-custom-100: #E7E7E7;
@@ -56,6 +57,7 @@
   --color-tertiary: var(--color-tertiary);
   --color-accent-1: var(--color-accent-1);
   --color-neutral-custom-800: var(--color-neutral-custom--800);
+  --color-neutral-custom-500: var(--color-neutral-custom-500);
   --color-neutral-custom-400: var(--color-neutral-custom--400);
   --color-neutral-custom-300: var(--color-neutral-custom--300);
   --color-neutral-custom-100: var(--color-neutral-custom-100);
@@ -165,6 +167,7 @@
     @apply border-border outline-ring/50;
 
   }
+
   body {
     @apply bg-background text-foreground;
 
@@ -190,4 +193,30 @@
 
 .shrink {
   @apply md:ml-28;
+}
+
+.product-table {
+  @apply border-collapse w-full;
+
+  th,
+  td {
+    @apply p-3
+  }
+
+  th {
+    @apply text-left bg-neutral-custom-100 first:rounded-tl-2xl last:rounded-tr-2xl first:table-cell hidden md:table-cell;
+  }
+
+  td {
+    @apply first:block grid grid-cols-[15ch_auto] md:table-cell text-sm;
+  }
+
+
+}
+
+.product-table td::before {
+  content: attr(data-cell);
+  font-size: 14px;
+  color: var(--color-neutral-custom-500);
+  text-transform: capitalize;
 }
