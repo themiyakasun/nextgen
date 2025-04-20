@@ -1,9 +1,9 @@
 'use client';
 
-import { menuItems } from '@/constants';
-import { getCategories } from '@/lib/actions/category';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+
+import { getCategories } from '@/lib/actions/category';
 
 type Props = {
   showMenu: boolean;
