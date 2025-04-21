@@ -224,3 +224,16 @@
   color: var(--color-neutral-custom-500);
   text-transform: capitalize;
 }
+
+.specs-table {
+  @apply w-full;
+
+  td {
+    @apply px-[15px] py-[6px];
+  }
+
+}
+
+.specs-table tr:nth-of-type(2n) {
+  background-color: #F5F7FF
+}

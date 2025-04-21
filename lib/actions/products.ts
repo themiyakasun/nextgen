@@ -155,3 +155,45 @@ export const getTotalCountofProducts = async () => {
   const result = await db.select({ count: count() }).from(products);
   return result;
 };
+
+export const getProductById = async (id: string) => {
+  try {
+    const productResult = await db
+      .select()
+      .from(products)
+      .where(eq(products.id, id))
+      .limit(1);
+
+    const images = await db
+      .select()
+      .from(productImages)
+      .where(eq(productImages.productId, productResult[0].id));
+
+    const specs = await db
+      .select()
+      .from(productSpecifications)
+      .where(eq(productSpecifications.productId, productResult[0].id));
+
+    const brandDetails = await db
+      .select()
+      .from(brands)
+      .where(eq(brands.id, productResult[0].id));
+
+    const brandMap = Object.fromEntries(
+      brandDetails.map((brand) => [brand.id, brand])
+    );
+
+    const productDetails = productResult.map((product) => {
+      return {
+        ...product,
+        images: images.filter((image) => image.productId === product.id),
+        specs: specs.filter((spec) => spec.productId === product.id),
+        brand: brandMap[product.brandId],
+      };
+    });
+
+    return productDetails[0];
+  } catch (error) {
+    console.log(error);
+  }
+};

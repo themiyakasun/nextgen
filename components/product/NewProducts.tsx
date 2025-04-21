@@ -1,9 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 
-import ProductCard from './shared/ProductCard';
+import ProductCard from '@/components/shared/ProductCard';
 import { getProducts } from '@/lib/actions/products';
-import Loader from './shared/Loader';
+import Loader from '@/components/shared/Loader';
 
 const NewProducts = () => {
   const [products, setProducts] = useState<ProductDetails[] | null | undefined>(
