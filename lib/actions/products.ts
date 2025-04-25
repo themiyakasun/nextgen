@@ -197,3 +197,16 @@ export const getProductById = async (id: string) => {
     console.log(error);
   }
 };
+
+export const getProductImages = async (productId: string) => {
+  try {
+    const result = await db
+      .select()
+      .from(productImages)
+      .where(eq(productImages.productId, productId));
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};

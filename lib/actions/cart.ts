@@ -2,8 +2,8 @@
 
 import { auth } from '@/auth';
 import { db } from '@/database/drizzle';
-import { cart } from '@/database/schema';
-import { and, eq } from 'drizzle-orm';
+import { cart, products } from '@/database/schema';
+import { and, count, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
 interface Props {
@@ -26,20 +26,25 @@ export const addToCart = async (params: Props) => {
       userId,
     });
 
+    let message = '';
+
     if (existingCartItems == null) {
       await db.insert(cart).values({
         productId,
         userId,
         quantity,
       });
+      message = 'add';
     } else {
       await db
         .update(cart)
         .set({ quantity: existingCartItems[0].quantity + quantity })
         .where(and(eq(cart.productId, productId), eq(cart.userId, userId)));
+
+      message = 'update';
     }
 
-    return { success: true };
+    return { success: true, message: message };
   } catch (error) {
     console.log(error);
     return { success: false, error: 'Add to cart Error' };
@@ -67,4 +72,33 @@ export const getCartItembyProductAndUser = async ({
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getCartItemsByUser = async (userId: string) => {
+  try {
+    const result = await db
+      .select({
+        cart,
+        product: {
+          id: products.id,
+          name: products.name,
+          price: products.price,
+          discount: products.discount,
+        },
+      })
+      .from(cart)
+      .where(eq(cart.userId, userId))
+      .leftJoin(products, eq(cart.productId, products.id));
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCartTotalByUser = async (userId: string) => {
+  return await db
+    .select({ count: count() })
+    .from(cart)
+    .where(eq(cart.userId, userId));
 };

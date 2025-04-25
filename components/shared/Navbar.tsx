@@ -17,17 +17,30 @@ import { IKImage } from 'imagekitio-next';
 import config from '@/config';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import MenuItems from '../MenuItems';
+import CartInfo from '../dropdowns/CartInfo';
+import { getCartTotalByUser } from '@/lib/actions/cart';
 
 const Navbar = ({ session }: { session: Session | null }) => {
   const [windowWidth, setWindowWidth] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
   const [showAccountInfo, setShowAccountInfo] = useState(false);
+  const [showCartInfo, setShowCartInfo] = useState(false);
+  const [cartTotal, setCartTotal] = useState(0);
 
   const breakPoint = 768;
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
   }, []);
+
+  useEffect(() => {
+    const fetchCartTotal = async () => {
+      const result = await getCartTotalByUser(session?.user?.id as string);
+      setCartTotal(result[0].count);
+    };
+
+    fetchCartTotal();
+  }, [session?.user?.id]);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -37,12 +50,22 @@ const Navbar = ({ session }: { session: Session | null }) => {
     setShowAccountInfo(!showAccountInfo);
   };
 
+  const toggleCartInfo = () => {
+    setShowCartInfo(!showCartInfo);
+  };
+
   const onAccountInfoClickOutside = () => {
     setShowAccountInfo(false);
   };
 
+  const onCartInfoClickOutside = () => {
+    setShowCartInfo(false);
+  };
+
   const accountInfoRef = useRef<HTMLDivElement>(null);
+  const cartInfoRef = useRef<HTMLDivElement>(null);
   useClickOutside(accountInfoRef, onAccountInfoClickOutside);
+  useClickOutside(cartInfoRef, onCartInfoClickOutside);
 
   return (
     <div className='navbar-container'>
@@ -97,12 +120,16 @@ const Navbar = ({ session }: { session: Session | null }) => {
         <button className='md:block hidden'>
           <SearchIcon className='text-black hidden md:block' />
         </button>
-        <button className='relative'>
+        <div className='relative' ref={cartInfoRef}>
           <div className='md:bg-primary-custom bg-white w-[17px] h-[17px] rounded-full flex items-center justify-center font-bold text-[10px] md:text-white text-primary-custom absolute -top-2 -right-2 z-10'>
-            2
+            {cartTotal}
           </div>
-          <ShoppingCartOutlinedIcon className='md:text-black  text-white scale-x-[-1]' />
-        </button>
+          <button onClick={toggleCartInfo}>
+            <ShoppingCartOutlinedIcon className='md:text-black  text-white scale-x-[-1]' />
+          </button>
+
+          <CartInfo show={showCartInfo} userId={session?.user?.id} />
+        </div>
 
         <div
           className='md:w-9 md:h-9 w-[34px] h-[34px] flex items-center justify-center border-2 md:border-black border-white rounded-full relative'

@@ -23,7 +23,13 @@ const AddToCart = ({ productId }: Props) => {
     }
 
     setQuantity(1);
-    toast.success('Item Added to cart successfully');
+    if (result.message === 'add') {
+      toast.success('Item Added to cart successfully');
+    } else {
+      toast.success(
+        'Item already in the cart but successfully increased the quantity'
+      );
+    }
   };
 
   return (

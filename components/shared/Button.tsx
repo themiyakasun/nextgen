@@ -30,7 +30,7 @@ const Button = ({
   }
 
   if (variant === 'outline') {
-    style += ` border-2  ${color === 'white' ? 'border-white text-white' : 'border-primary text-primary'}`;
+    style += ` border-2  ${color === 'white' ? 'border-white text-white' : 'border-primary-custom text-primary-custom'}`;
   }
 
   return link ? (

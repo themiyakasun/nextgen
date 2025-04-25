@@ -66,3 +66,19 @@ interface ProductImage {
   image: string;
   isPrimary;
 }
+
+interface CartItem {
+  cart: {
+    id: string;
+    productId: string | null;
+    userId: string | null;
+    quantity: number;
+    createdAt: Date | null;
+  };
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    discount: number | null;
+  } | null;
+}
