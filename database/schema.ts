@@ -193,3 +193,11 @@ export const productReviews = pgTable('product_reviews', {
   productId: uuid('product_id').references(() => products.id),
   review: integer('review').default(0).notNull(),
 });
+
+export const cart = pgTable('cart', {
+  id: uuid('id').primaryKey().notNull().defaultRandom().unique(),
+  userId: text('user_id').references(() => users.id),
+  productId: uuid('product_id').references(() => products.id),
+  quantity: integer('quantity').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+});

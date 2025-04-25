@@ -49,7 +49,7 @@ const ProductDetails = ({ id }: Props) => {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
             />
-            <AddToCart />
+            <AddToCart productId={product.id} />
           </div>
           <div className='flex md:flex-row flex-col-reverse md:items-center w-full md:bg-[#F5F7FF] md:mt-10'>
             <div className='md:w-1/2 w-full h-full md:p-10 '>
@@ -89,7 +89,7 @@ const ProductDetails = ({ id }: Props) => {
             </div>
           </div>
           <div className='md:hidden mt-5 flex items-center justify-center w-full'>
-            <AddToCart />
+            <AddToCart productId={product.id} />
           </div>
         </div>
       )}
