@@ -58,6 +58,7 @@ const CartInfo = ({ show, userId }: Props) => {
             text='View or Edit Your Cart'
             variant='outline'
             color='default'
+            link='/cart'
           />
         </div>
       </div>

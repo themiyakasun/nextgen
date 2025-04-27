@@ -218,12 +218,7 @@
 
 }
 
-.product-table td::before {
-  content: attr(data-cell);
-  font-size: 14px;
-  color: var(--color-neutral-custom-500);
-  text-transform: capitalize;
-}
+
 
 .specs-table {
   @apply w-full;
@@ -236,4 +231,39 @@
 
 .specs-table tr:nth-of-type(2n) {
   background-color: #F5F7FF
+}
+
+.cart-table {
+  @apply w-full;
+
+  th,
+  td {
+    @apply p-3;
+  }
+
+  th {
+    @apply text-left md:table-cell hidden md:text-sm text-[11px];
+  }
+
+  td {
+    @apply first:block grid grid-cols-[15ch_auto] md:table-cell md:text-base text-xs font-semibold md:before:content-[attr('')];
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-table td::before {
+    content: attr(data-cell);
+    font-size: 14px;
+    color: var(--color-neutral-custom-500);
+    text-transform: capitalize;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .product-table td::before {
+    content: attr(data-cell);
+    font-size: 14px;
+    color: var(--color-neutral-custom-500);
+    text-transform: capitalize;
+  }
 }

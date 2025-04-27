@@ -102,3 +102,20 @@ export const getCartTotalByUser = async (userId: string) => {
     .from(cart)
     .where(eq(cart.userId, userId));
 };
+
+export const updateCartQuantities = async (
+  cartId: string,
+  quantity: number
+) => {
+  try {
+    await db
+      .update(cart)
+      .set({ quantity: quantity })
+      .where(eq(cart.id, cartId));
+
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: error };
+  }
+};
