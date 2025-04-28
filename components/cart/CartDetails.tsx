@@ -2,7 +2,6 @@
 
 import {
   clearAllCartItems,
-  getCartItemsByUser,
   removeCartItem,
   updateCartQuantities,
 } from '@/lib/actions/cart';
@@ -17,6 +16,7 @@ import { toast } from 'sonner';
 
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { fetchCartItems } from '@/services/cart';
 
 const CartDetails = ({ session }: { session: Session | null }) => {
   const [cartItems, setCartItems] = useState<CartItem[] | null | undefined>(
@@ -72,37 +72,27 @@ const CartDetails = ({ session }: { session: Session | null }) => {
   };
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      if (session === null) {
+    const fetchCart = async () => {
+      if (session === null || session.user === undefined) {
         redirect('/sign-in');
       }
       setLoading(true);
-      const result = await getCartItemsByUser(session.user?.id as string);
+      try {
+        const { cartItems, quantities, subTotals } = await fetchCartItems(
+          session?.user.id as string
+        );
 
-      if (result) {
-        setCartItems(result);
-        const initialQuantities: { [cartId: string]: number } = {};
-        const initialSubTotals: { [cartId: string]: number } = {};
-
-        result.forEach((item) => {
-          const price = item.product?.price ?? 0;
-          const discount = item.product?.discount ?? 0;
-          const quantity = item.cart.quantity;
-
-          const priceAfterDiscount = price - (price * discount) / 100;
-          const subTotal = priceAfterDiscount * quantity;
-
-          initialQuantities[item.cart.id] = quantity;
-          initialSubTotals[item.cart.id] = subTotal;
-        });
-
-        setQuantities(initialQuantities);
-        setSubTotals(initialSubTotals);
+        setCartItems(cartItems);
+        setQuantities(quantities);
+        setSubTotals(subTotals);
+      } catch (error) {
+        console.error('Error fetching cart:', error);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchCartItems();
+    fetchCart();
   }, [session?.user?.id, session]);
 
   return (
