@@ -1,4 +1,3 @@
-import { SvgIconProps } from '@mui/material';
 import Link from 'next/link';
 import { JSX } from 'react';
 
@@ -11,6 +10,11 @@ type Props = {
   text: string;
   leftIcon?: JSX.Element;
   rightIcon?: JSX.Element;
+  onClick?: (
+    event:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLAnchorElement>
+  ) => void;
 };
 
 const Button = ({
@@ -22,6 +26,7 @@ const Button = ({
   text,
   leftIcon,
   rightIcon,
+  onClick,
 }: Props) => {
   let style = `${customStyle} text-xs md:text-sm font-semibold flex items-center ${leftIcon || rightIcon ? 'gap-2' : ''} justify-center md:w-full py-2 px-4 md:px-[26px] rounded-[50px]`;
 
@@ -40,7 +45,7 @@ const Button = ({
       {rightIcon}
     </Link>
   ) : (
-    <button type={type} className={style}>
+    <button type={type} className={style} onClick={onClick}>
       {leftIcon}
       {text}
       {rightIcon}

@@ -119,3 +119,24 @@ export const updateCartQuantities = async (
     return { success: false, error: error };
   }
 };
+
+export const clearAllCartItems = async (userId: string) => {
+  try {
+    await db.delete(cart).where(eq(cart.userId, userId));
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: error };
+  }
+};
+
+export const removeCartItem = async (cartId: string) => {
+  try {
+    await db.delete(cart).where(eq(cart.id, cartId));
+
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: error };
+  }
+};

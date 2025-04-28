@@ -1,6 +1,11 @@
 'use client';
 
-import { getCartItemsByUser, updateCartQuantities } from '@/lib/actions/cart';
+import {
+  clearAllCartItems,
+  getCartItemsByUser,
+  removeCartItem,
+  updateCartQuantities,
+} from '@/lib/actions/cart';
 import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -9,6 +14,9 @@ import CartItemImage from './CartItemImage';
 import { Input } from '../ui/input';
 import Button from '../shared/Button';
 import { toast } from 'sonner';
+
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const CartDetails = ({ session }: { session: Session | null }) => {
   const [cartItems, setCartItems] = useState<CartItem[] | null | undefined>(
@@ -30,8 +38,37 @@ const CartDetails = ({ session }: { session: Session | null }) => {
     if (result.error) {
       toast.error(result.error as string);
     }
+  };
 
-    toast.success('Cart Updated');
+  const handleRemoveCartItems = async () => {
+    try {
+      const result = await clearAllCartItems(session?.user?.id as string);
+
+      if (result.error) {
+        toast.error(result.error as string);
+      }
+
+      toast.success('Cart cleared successfully');
+      setLoading(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveCartItem = async (cartId: string) => {
+    try {
+      const result = await removeCartItem(cartId);
+
+      if (result.error) {
+        toast.error(result.error as string);
+      }
+
+      toast.success('Item removed successfully');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -79,10 +116,13 @@ const CartDetails = ({ session }: { session: Session | null }) => {
               <th>Price</th>
               <th>Qty</th>
               <th>Sub Total</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {cartItems !== undefined && cartItems !== null ? (
+            {cartItems !== undefined &&
+            cartItems !== null &&
+            cartItems.length > 0 ? (
               cartItems.map((cartItem) => {
                 const price = cartItem.product?.price ?? 0;
 
@@ -108,7 +148,10 @@ const CartDetails = ({ session }: { session: Session | null }) => {
                           }
                           className='w-[70px] h-[50px]'
                           onChange={(e) => {
-                            const newQuantity = parseInt(e.target.value);
+                            let newQuantity = parseInt(e.target.value);
+
+                            if (newQuantity === 0) newQuantity = 1;
+
                             const price = cartItem.product?.price ?? 0;
                             const discount = cartItem.product?.discount ?? 0;
                             const priceAfterDiscount =
@@ -134,6 +177,19 @@ const CartDetails = ({ session }: { session: Session | null }) => {
                     <td data-cell='sub total'>
                       Rs. {subTotals[cartItem.cart.id].toLocaleString()}
                     </td>
+                    <td>
+                      <div className='flex md:flex-col md:justify-center gap-2'>
+                        <button
+                          className='border-2 border-secondary-custom text-secondary-custom rounded-full text-sm w-5 h-5 flex items-center justify-center'
+                          onClick={() => handleRemoveCartItem(cartItem.cart.id)}
+                        >
+                          <CloseOutlinedIcon fontSize='inherit' />
+                        </button>
+                        <button className='border-2 border-secondary-custom text-secondary-custom rounded-full text-sm w-5 h-5 flex items-center justify-center'>
+                          <EditOutlinedIcon fontSize='inherit' />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 );
               })
@@ -145,16 +201,21 @@ const CartDetails = ({ session }: { session: Session | null }) => {
           </tbody>
         </table>
       </div>
-      <div className='flex mt-5 md:justify-between justify-center w-full items-center'>
-        <div>
-          <Button
-            type='submit'
-            variant='primary'
-            color='black'
-            text='Update Shopping Cart'
-          />
-        </div>
-      </div>
+      {cartItems !== undefined &&
+        cartItems !== null &&
+        cartItems.length > 0 && (
+          <div className='flex mt-5 md:justify-between justify-center w-full items-center'>
+            <div>
+              <Button
+                type='submit'
+                variant='primary'
+                color='black'
+                text='Delete All Items'
+                onClick={handleRemoveCartItems}
+              />
+            </div>
+          </div>
+        )}
     </>
   );
 };
