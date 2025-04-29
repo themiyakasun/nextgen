@@ -5,6 +5,7 @@ export type CartState = {
   quantities: { [cartId: string]: number };
   subTotals: { [cartId: string]: number };
   loading: boolean;
+  orderTotal: number;
 };
 
 export type CartActions = {
@@ -19,6 +20,7 @@ export type CartActions = {
     quantity: number,
     subTotal: number
   ) => void;
+  setOrderTotal: (orderTotal: number) => void;
 };
 
 export type CartStore = CartState & CartActions;
@@ -28,6 +30,7 @@ export const defaultInitState: CartState = {
   quantities: {},
   subTotals: {},
   loading: false,
+  orderTotal: 0,
 };
 
 export const createCartStore = (initState: CartState = defaultInitState) => {
@@ -57,5 +60,6 @@ export const createCartStore = (initState: CartState = defaultInitState) => {
           [cartId]: subTotal,
         },
       })),
+    setOrderTotal: (orderTotal: number) => set({ orderTotal }),
   }));
 };

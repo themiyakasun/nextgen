@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Session } from 'next-auth';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 import {
   Accordion,
@@ -18,7 +19,10 @@ import { cartTotal } from '@/services/cart';
 import { validateCouponCode } from '@/lib/actions/cart';
 
 const CartSummary = ({ session }: { session: Session | null }) => {
-  const { cartItems, quantities } = useCartStore((state) => state);
+  const router = useRouter();
+  const { cartItems, quantities, setOrderTotal } = useCartStore(
+    (state) => state
+  );
   const [code, setCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const total = cartTotal(cartItems, quantities);
@@ -49,6 +53,11 @@ const CartSummary = ({ session }: { session: Session | null }) => {
     } else {
       toast.error(result.error as string);
     }
+  };
+
+  const proceedToCheckout = async () => {
+    if (newTotal !== undefined) setOrderTotal(newTotal);
+    router.push('/checkout');
   };
 
   return (
@@ -104,6 +113,16 @@ const CartSummary = ({ session }: { session: Session | null }) => {
             </span>
           </div>
         )}
+
+        <div className='w-full mt-4'>
+          <Button
+            text='Proceed to Checkout'
+            variant='primary'
+            color='default'
+            customStyle='w-full py-3'
+            onClick={proceedToCheckout}
+          />
+        </div>
       </div>
     </div>
   );
