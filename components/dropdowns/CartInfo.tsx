@@ -1,9 +1,10 @@
 'use client';
 
-import { getCartItemsByUser } from '@/lib/actions/cart';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Button from '../shared/Button';
 import CartInfoItem from '../cart/CartInfoItem';
+import { fetchCartItems } from '@/services/cart';
+import { useCartStore } from '@/providers/CartStoreProvider';
 
 type Props = {
   show: boolean;
@@ -11,20 +12,26 @@ type Props = {
 };
 
 const CartInfo = ({ show, userId }: Props) => {
-  const [cartItems, setCartItems] = useState<CartItem[] | null | undefined>(
-    null
+  const { cartItems, setLoading, quantities, setCartData } = useCartStore(
+    (state) => state
   );
 
   useEffect(() => {
-    const fetchCartItems = async () => {
+    const fetchCart = async () => {
+      setLoading(true);
       if (userId) {
-        const result = await getCartItemsByUser(userId);
-        setCartItems(result);
+        const { cartItemsInit, quantitiesInit, subTotalsInit } =
+          await fetchCartItems(userId);
+
+        if (cartItemsInit && quantitiesInit && subTotalsInit) {
+          setCartData(cartItemsInit, quantitiesInit, subTotalsInit);
+        }
+        setLoading(false);
       }
     };
 
-    fetchCartItems();
-  }, [userId]);
+    fetchCart();
+  }, [userId, setCartData, setLoading]);
 
   let subTotal;
 
@@ -36,7 +43,7 @@ const CartInfo = ({ show, userId }: Props) => {
         const { price, discount } = item.product;
         const finalPrice = discount ? price - (price * discount) / 100 : price;
 
-        return total + finalPrice * item.cart.quantity;
+        return total + finalPrice * quantities[item.cart.id];
       }, 0) ?? 0;
   }
 
@@ -72,7 +79,7 @@ const CartInfo = ({ show, userId }: Props) => {
               cartItem.product && (
                 <CartInfoItem
                   product={cartItem.product}
-                  quantity={cartItem.cart.quantity}
+                  quantity={quantities[cartItem.cart.id]}
                   key={cartItem.cart.id}
                 />
               )

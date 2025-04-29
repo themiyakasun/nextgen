@@ -37,9 +37,9 @@ const CartInfoItem = ({ product, quantity }: Props) => {
   return (
     <Link
       href={`/products/${product.id}`}
-      className='flex items-center border-y-2 border-secondary-custom/70 px-7'
+      className='flex items-center first:border-t-2 border-b-2 border-secondary-custom/70 px-7'
     >
-      <span className='flex-1'>{quantity} x</span>
+      <span className='flex-1 max-w-[40px]'>{quantity} x</span>
 
       {product !== null &&
         productImages !== null &&

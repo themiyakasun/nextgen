@@ -27,8 +27,8 @@ export const fetchCartItems = async (userId: string) => {
   });
 
   return {
-    cartItems: result,
-    quantities: initialQuantities,
-    subTotals: initialSubTotals,
+    cartItemsInit: result,
+    quantitiesInit: initialQuantities,
+    subTotalsInit: initialSubTotals,
   };
 };

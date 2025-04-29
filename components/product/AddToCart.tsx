@@ -29,6 +29,7 @@ const AddToCart = ({ productId }: Props) => {
       toast.success(
         'Item already in the cart but successfully increased the quantity'
       );
+      window.location.reload();
     }
   };
 

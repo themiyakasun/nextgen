@@ -7,7 +7,7 @@ import {
 } from '@/lib/actions/cart';
 import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Loader from '../shared/Loader';
 import CartItemImage from './CartItemImage';
 import { Input } from '../ui/input';
@@ -17,16 +17,18 @@ import { toast } from 'sonner';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { fetchCartItems } from '@/services/cart';
+import { useCartStore } from '@/providers/CartStoreProvider';
 
 const CartDetails = ({ session }: { session: Session | null }) => {
-  const [cartItems, setCartItems] = useState<CartItem[] | null | undefined>(
-    null
-  );
-  const [loading, setLoading] = useState(false);
-  const [quantities, setQuantities] = useState<{ [cartId: string]: number }>(
-    {}
-  );
-  const [subTotals, setSubTotals] = useState<{ [cartId: string]: number }>({});
+  const {
+    cartItems,
+    quantities,
+    subTotals,
+    loading,
+    setCartData,
+    setLoading,
+    setQuantityAndSubtotal,
+  } = useCartStore((state) => state);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +68,7 @@ const CartDetails = ({ session }: { session: Session | null }) => {
       }
 
       toast.success('Item removed successfully');
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -78,13 +81,11 @@ const CartDetails = ({ session }: { session: Session | null }) => {
       }
       setLoading(true);
       try {
-        const { cartItems, quantities, subTotals } = await fetchCartItems(
-          session?.user.id as string
-        );
+        const { cartItemsInit, quantitiesInit, subTotalsInit } =
+          await fetchCartItems(session?.user.id as string);
 
-        setCartItems(cartItems);
-        setQuantities(quantities);
-        setSubTotals(subTotals);
+        if (quantitiesInit === undefined) return;
+        setCartData(cartItemsInit, quantitiesInit, subTotalsInit);
       } catch (error) {
         console.error('Error fetching cart:', error);
       } finally {
@@ -93,7 +94,9 @@ const CartDetails = ({ session }: { session: Session | null }) => {
     };
 
     fetchCart();
-  }, [session?.user?.id, session]);
+  }, [session?.user?.id, session, setCartData, setLoading]);
+
+  console.log(subTotals);
 
   return (
     <>
@@ -149,15 +152,11 @@ const CartDetails = ({ session }: { session: Session | null }) => {
                             const newSubTotal =
                               priceAfterDiscount * newQuantity;
 
-                            setQuantities((prev) => ({
-                              ...prev,
-                              [cartItem.cart.id]: newQuantity,
-                            }));
-
-                            setSubTotals((prev) => ({
-                              ...prev,
-                              [cartItem.cart.id]: newSubTotal,
-                            }));
+                            setQuantityAndSubtotal(
+                              cartItem.cart.id,
+                              newQuantity,
+                              newSubTotal
+                            );
 
                             updateCart(cartItem.cart.id, newQuantity);
                           }}

@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 
 import { Toaster } from '@/components/ui/sonner';
 import { auth } from '@/auth';
+import { CartStoreProvider } from '@/providers/CartStoreProvider';
 
 const poppins = localFont({
   src: [
@@ -30,10 +31,12 @@ export default async function RootLayout({
   return (
     <html lang='en'>
       <SessionProvider session={session}>
-        <body className={`${poppins.className} antialiased`}>
-          {children}
-          <Toaster />
-        </body>
+        <CartStoreProvider>
+          <body className={`${poppins.className} antialiased`}>
+            {children}
+            <Toaster />
+          </body>
+        </CartStoreProvider>
       </SessionProvider>
     </html>
   );
