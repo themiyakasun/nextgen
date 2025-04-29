@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  clearAllCartItems,
-  removeCartItem,
-  updateCartQuantities,
-} from '@/lib/actions/cart';
+import { clearAllCartItems, updateCartQuantities } from '@/lib/actions/cart';
 import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -16,7 +12,7 @@ import { toast } from 'sonner';
 
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { fetchCartItems } from '@/services/cart';
+import { fetchCartItems, handleRemoveCartItem } from '@/services/cart';
 import { useCartStore } from '@/providers/CartStoreProvider';
 
 const CartDetails = ({ session }: { session: Session | null }) => {
@@ -59,21 +55,6 @@ const CartDetails = ({ session }: { session: Session | null }) => {
     }
   };
 
-  const handleRemoveCartItem = async (cartId: string) => {
-    try {
-      const result = await removeCartItem(cartId);
-
-      if (result.error) {
-        toast.error(result.error as string);
-      }
-
-      toast.success('Item removed successfully');
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     const fetchCart = async () => {
       if (session === null || session.user === undefined) {
@@ -95,8 +76,6 @@ const CartDetails = ({ session }: { session: Session | null }) => {
 
     fetchCart();
   }, [session?.user?.id, session, setCartData, setLoading]);
-
-  console.log(subTotals);
 
   return (
     <>

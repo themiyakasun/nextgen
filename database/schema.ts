@@ -116,11 +116,21 @@ export const addresses = pgTable('addresses', {
   country: text('country').notNull(),
 });
 
-export const userAddresses = pgTable('user_addresses', {
-  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  addressId: uuid('address_id').references(() => addresses.id),
-  addressType: ADDRESS_TYPE_ENUM('address_type').default('SHIPPING'),
-});
+export const userAddresses = pgTable(
+  'user_addresses',
+  {
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+    addressId: uuid('address_id').references(() => addresses.id),
+    addressType: ADDRESS_TYPE_ENUM('address_type').default('SHIPPING'),
+  },
+  (userAddresses) => [
+    {
+      compositePk: primaryKey({
+        columns: [userAddresses.userId, userAddresses.addressId],
+      }),
+    },
+  ]
+);
 
 export const categories = pgTable('categories', {
   id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
@@ -201,3 +211,31 @@ export const cart = pgTable('cart', {
   quantity: integer('quantity').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
 });
+
+export const discountCodes = pgTable('discount_codes', {
+  id: uuid('id').primaryKey().notNull().defaultRandom().unique(),
+  code: text('code').notNull().unique(),
+  discount: integer('discount').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  validTill: timestamp('valid_till').defaultNow().notNull(),
+});
+
+export const couponRedemptions = pgTable(
+  'coupon_redemptions',
+  {
+    codeId: uuid('code_id')
+      .references(() => discountCodes.id)
+      .notNull(),
+    userId: text('user_id')
+      .references(() => users.id)
+      .notNull(),
+    usedDate: timestamp('used_date').defaultNow().notNull(),
+  },
+  (couponRedemptions) => [
+    {
+      compositePk: primaryKey({
+        columns: [couponRedemptions.codeId, couponRedemptions.userId],
+      }),
+    },
+  ]
+);

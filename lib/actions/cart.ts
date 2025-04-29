@@ -2,7 +2,12 @@
 
 import { auth } from '@/auth';
 import { db } from '@/database/drizzle';
-import { cart, products } from '@/database/schema';
+import {
+  cart,
+  couponRedemptions,
+  discountCodes,
+  products,
+} from '@/database/schema';
 import { and, count, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
@@ -135,6 +140,46 @@ export const removeCartItem = async (cartId: string) => {
     await db.delete(cart).where(eq(cart.id, cartId));
 
     return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: error };
+  }
+};
+
+export const validateCouponCode = async (code: string, userId: string) => {
+  const today = new Date();
+  try {
+    const result = await db
+      .select()
+      .from(discountCodes)
+      .where(eq(discountCodes.code, code))
+      .limit(1);
+
+    const usedUsers = await db
+      .select()
+      .from(couponRedemptions)
+      .where(
+        and(
+          eq(couponRedemptions.userId, userId),
+          eq(couponRedemptions.codeId, result[0].id)
+        )
+      )
+      .limit(1);
+
+    const validTill = new Date(result[0].validTill);
+
+    if (result.length > 0) {
+      if (today < validTill && usedUsers.length === 0) {
+        return { success: true, discount: result[0].discount };
+      } else {
+        return {
+          success: false,
+          error: 'Code is expire or you used it before',
+        };
+      }
+    } else {
+      return { success: false, error: `${code} is not valid` };
+    }
   } catch (error) {
     console.log(error);
     return { success: false, error: error };

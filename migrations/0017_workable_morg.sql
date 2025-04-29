@@ -1,0 +1,1 @@
+ALTER TABLE "discount_codes" ADD COLUMN "discount" integer NOT NULL;

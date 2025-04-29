@@ -9,7 +9,7 @@ const page = async () => {
   return (
     <div>
       <CartDetails session={session} />
-      <CartSummary />
+      <CartSummary session={session} />
     </div>
   );
 };

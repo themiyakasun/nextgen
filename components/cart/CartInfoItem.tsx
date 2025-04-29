@@ -9,6 +9,7 @@ import { getProductImages } from '@/lib/actions/products';
 
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { handleRemoveCartItem } from '@/services/cart';
 
 type Props = {
   product: {
@@ -18,9 +19,10 @@ type Props = {
     discount: number | null;
   };
   quantity: number;
+  cartId: string;
 };
 
-const CartInfoItem = ({ product, quantity }: Props) => {
+const CartInfoItem = ({ product, quantity, cartId }: Props) => {
   const [productImages, setProductImages] = useState<
     ProductImage[] | null | undefined
   >(null);
@@ -57,7 +59,10 @@ const CartInfoItem = ({ product, quantity }: Props) => {
             <span className='text-xs max-w-[120px] ml-2'>{product.name}</span>
 
             <div className='flex flex-col justify-center gap-2'>
-              <button className='border-2 border-secondary-custom text-secondary-custom rounded-full text-sm w-5 h-5 flex items-center justify-center'>
+              <button
+                className='border-2 border-secondary-custom text-secondary-custom rounded-full text-sm w-5 h-5 flex items-center justify-center'
+                onClick={() => handleRemoveCartItem(cartId)}
+              >
                 <CloseOutlinedIcon fontSize='inherit' />
               </button>
               <button className='border-2 border-secondary-custom text-secondary-custom rounded-full text-sm w-5 h-5 flex items-center justify-center'>

@@ -1,4 +1,5 @@
-import { getCartItemsByUser } from '@/lib/actions/cart';
+import { getCartItemsByUser, removeCartItem } from '@/lib/actions/cart';
+import { toast } from 'sonner';
 
 export const fetchCartItems = async (userId: string) => {
   const result = await getCartItemsByUser(userId);
@@ -31,4 +32,38 @@ export const fetchCartItems = async (userId: string) => {
     quantitiesInit: initialQuantities,
     subTotalsInit: initialSubTotals,
   };
+};
+
+export const cartTotal = (
+  cartItems: CartItem[],
+  quantities: { [cartId: string]: number }
+) => {
+  if (cartItems !== null && cartItems !== undefined) {
+    const subTotal =
+      cartItems?.reduce((total, item) => {
+        if (!item.product) return total;
+
+        const { price, discount } = item.product;
+        const finalPrice = discount ? price - (price * discount) / 100 : price;
+
+        return total + finalPrice * quantities[item.cart.id];
+      }, 0) ?? 0;
+
+    return subTotal;
+  }
+};
+
+export const handleRemoveCartItem = async (cartId: string) => {
+  try {
+    const result = await removeCartItem(cartId);
+
+    if (result.error) {
+      toast.error(result.error as string);
+    }
+
+    toast.success('Item removed successfully');
+    window.location.reload();
+  } catch (error) {
+    console.log(error);
+  }
 };

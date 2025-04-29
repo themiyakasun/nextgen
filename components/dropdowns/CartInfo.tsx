@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect } from 'react';
+
 import Button from '../shared/Button';
 import CartInfoItem from '../cart/CartInfoItem';
-import { fetchCartItems } from '@/services/cart';
+import { cartTotal, fetchCartItems } from '@/services/cart';
 import { useCartStore } from '@/providers/CartStoreProvider';
 
 type Props = {
@@ -33,19 +34,7 @@ const CartInfo = ({ show, userId }: Props) => {
     fetchCart();
   }, [userId, setCartData, setLoading]);
 
-  let subTotal;
-
-  if (cartItems !== null && cartItems !== undefined) {
-    subTotal =
-      cartItems?.reduce((total, item) => {
-        if (!item.product) return total;
-
-        const { price, discount } = item.product;
-        const finalPrice = discount ? price - (price * discount) / 100 : price;
-
-        return total + finalPrice * quantities[item.cart.id];
-      }, 0) ?? 0;
-  }
+  const total = cartTotal(cartItems, quantities);
 
   return (
     <div
@@ -80,6 +69,7 @@ const CartInfo = ({ show, userId }: Props) => {
                 <CartInfoItem
                   product={cartItem.product}
                   quantity={quantities[cartItem.cart.id]}
+                  cartId={cartItem.cart.id}
                   key={cartItem.cart.id}
                 />
               )
@@ -91,7 +81,7 @@ const CartInfo = ({ show, userId }: Props) => {
         <span className='text-sm font-semibold text-secondary-custom'>
           Sub Total:{' '}
           <span className='text-lg text-black'>
-            Rs. {subTotal?.toLocaleString()}
+            Rs. {total?.toLocaleString()}
           </span>
         </span>
 
