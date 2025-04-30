@@ -48,3 +48,14 @@ export const productSchema = z.object({
     })
   ),
 });
+
+export const addressSchema = z.object({
+  firstName: z.string().min(3),
+  lastName: z.string().min(3),
+  street: z.string().min(3),
+  country: z.string().min(3),
+  city: z.string().min(3),
+  state: z.string().min(3),
+  postalCode: z.string().min(3),
+  phoneNumber: z.string().min(10),
+});
