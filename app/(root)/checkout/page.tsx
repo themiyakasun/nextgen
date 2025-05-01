@@ -1,12 +1,12 @@
 import { auth } from '@/auth';
-import ShippingAddressForm from '@/components/forms/ShippingAddressForm';
+import CheckoutForm from '@/components/forms/CheckoutForm';
 import React from 'react';
 
 const page = async () => {
   const session = await auth();
   return (
     <div>
-      <ShippingAddressForm session={session} />
+      <CheckoutForm session={session} />
     </div>
   );
 };

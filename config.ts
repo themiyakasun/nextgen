@@ -15,6 +15,15 @@ const config = {
       privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
       urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
     },
+
+    stripe: {
+      publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
+      secretKey: process.env.STRIPE_SECRET_KEY!,
+    },
+
+    shippo: {
+      token: process.env.SHIPPO_TOKEN!,
+    },
   },
 };
 

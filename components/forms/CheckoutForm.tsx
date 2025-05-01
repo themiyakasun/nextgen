@@ -16,21 +16,26 @@ import {
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectItem,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import Button from '@/components/shared/Button';
 import { addressSchema } from '@/lib/validation';
-import { addSeries } from '@/lib/actions/series';
 import { Session } from 'next-auth';
+import { createCheckoutSession } from '@/lib/actions/checkout';
+import { useCartStore } from '@/providers/CartStoreProvider';
+import { addressCreation } from '@/lib/actions/address';
+import { countriesAndRegions } from '@/constants';
 
 interface Props {
   session: Session | null;
 }
 
-const ShippingAddressForm = ({ session }: Props) => {
+const CheckoutForm = ({ session }: Props) => {
+  const { cartItems } = useCartStore((state) => state);
+
   const form = useForm<z.infer<typeof addressSchema>>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
@@ -45,7 +50,20 @@ const ShippingAddressForm = ({ session }: Props) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof addressSchema>) => {};
+  const selectedCountry = form.watch('country');
+  const selectedCountryData = countriesAndRegions.find(
+    (c) => c.name === selectedCountry
+  );
+
+  const onSubmit = async (values: z.infer<typeof addressSchema>) => {
+    const addressValid = await addressCreation(values, session);
+
+    // const checkoutUrl = await createCheckoutSession(cartItems, session);
+
+    // if (checkoutUrl) {
+    //   window.location.href = checkoutUrl;
+    // }
+  };
 
   return (
     <div className='bg-white md:p-10 p-5 rounded-3xl mt-5'>
@@ -130,11 +148,23 @@ const ShippingAddressForm = ({ session }: Props) => {
                   Country
                 </FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={(val) => form.setValue('country', val)}
+                  >
                     <SelectTrigger className='w-full border-secondary-custom'>
                       <SelectValue placeholder='Select a country' />
                     </SelectTrigger>
-                    <SelectContent></SelectContent>
+                    <SelectContent>
+                      {countriesAndRegions.map((c) => (
+                        <SelectItem
+                          key={c.name}
+                          value={c.name}
+                          className='text-sm'
+                        >
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
@@ -151,11 +181,21 @@ const ShippingAddressForm = ({ session }: Props) => {
                   State/Province
                 </FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select onValueChange={(val) => form.setValue('state', val)}>
                     <SelectTrigger className='w-full border-secondary-custom'>
                       <SelectValue placeholder='Select a State' />
                     </SelectTrigger>
-                    <SelectContent></SelectContent>
+                    <SelectContent>
+                      {(selectedCountryData?.states || []).map((state) => (
+                        <SelectItem
+                          key={state}
+                          value={state}
+                          className='text-sm'
+                        >
+                          {state}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
@@ -244,4 +284,4 @@ const ShippingAddressForm = ({ session }: Props) => {
     </div>
   );
 };
-export default ShippingAddressForm;
+export default CheckoutForm;

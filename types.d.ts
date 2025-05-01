@@ -82,3 +82,14 @@ interface CartItem {
     discount: number | null;
   } | null;
 }
+
+interface Address {
+  firstName: string;
+  lastName: string;
+  street: string;
+  country: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  phoneNumber: string;
+}

@@ -51,6 +51,7 @@ const CartSummary = ({ session }: { session: Session | null }) => {
       setNewTotal(resultTotal);
       toast.success(`${code} added successfully`);
     } else {
+      setCode('');
       toast.error(result.error as string);
     }
   };
