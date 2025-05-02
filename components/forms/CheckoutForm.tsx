@@ -56,13 +56,11 @@ const CheckoutForm = ({ session }: Props) => {
   );
 
   const onSubmit = async (values: z.infer<typeof addressSchema>) => {
-    const addressValid = await addressCreation(values, session);
+    const checkoutUrl = await createCheckoutSession(cartItems, session, values);
 
-    // const checkoutUrl = await createCheckoutSession(cartItems, session);
-
-    // if (checkoutUrl) {
-    //   window.location.href = checkoutUrl;
-    // }
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
+    }
   };
 
   return (

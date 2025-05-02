@@ -1,33 +1,49 @@
 'use server';
 
-import { Session } from 'next-auth';
 import shippo from '../shippo';
+import { db } from '@/database/drizzle';
+import { addresses, userAddresses } from '@/database/schema';
 
-export const addressCreation = async (
-  addressData: Address,
-  session: Session | null
-) => {
-  const { firstName, lastName, state, street, country, city, postalCode } =
-    addressData;
+export const addressCreation = async (addressData: Address, userId: string) => {
+  const { state, street, country, city, postalCode } = addressData;
 
   try {
-    if (session === null) throw new Error('user is emtpy');
+    // const result = await shippo.addresses.create({
+    //   name: `${firstName} ${lastName}`,
+    //   company: '',
+    //   street1: street,
+    //   city,
+    //   state,
+    //   zip: postalCode,
+    //   country,
+    //   email: session.user?.email as string,
+    //   validate: true,
+    // });
 
-    const result = await shippo.addresses.create({
-      name: `${firstName} ${lastName}`,
-      company: '',
-      street1: street,
-      city,
-      state,
-      zip: postalCode,
-      country,
-      email: session.user?.email as string,
-      validate: true,
-    });
+    const address = await db
+      .insert(addresses)
+      .values({
+        street,
+        city,
+        state,
+        postalCode,
+        country,
+      })
+      .returning();
 
-    return result;
+    if (address.length > 0) {
+      await db.insert(userAddresses).values({
+        userId: userId,
+        addressId: address[0].id,
+      });
+
+      return { success: true, address: address };
+    } else {
+      return { success: false, error: 'No address can be found' };
+    }
   } catch (error) {
     console.log(error);
+    return { success: false, error: error };
   }
 };
 

@@ -6,7 +6,8 @@ import { converToSubcurrency } from '../covertToSubcurrency';
 
 export const createCheckoutSession = async (
   cartItems: CartItem[],
-  userSession: Session | null
+  userSession: Session | null,
+  address: Address
 ) => {
   try {
     if (userSession == null || userSession.user === undefined)
@@ -36,6 +37,14 @@ export const createCheckoutSession = async (
       metadata: {
         userId: (userSession.user.id as string) ?? 'guest',
         email: userSession.user.email as string,
+        firstName: address.firstName,
+        lastName: address.lastName,
+        street: address.street,
+        country: address.country,
+        city: address.city,
+        zip: address.postalCode,
+        phoneNumber: address.phoneNumber,
+        state: address.state,
       },
       mode: 'payment',
       payment_method_types: ['card'],
@@ -54,6 +63,10 @@ export const createCheckoutSession = async (
 
             product_data: {
               name: item.product.name,
+
+              metadata: {
+                id: item.product.id,
+              },
             },
           },
 

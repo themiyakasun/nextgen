@@ -19,6 +19,7 @@ const config = {
     stripe: {
       publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
       secretKey: process.env.STRIPE_SECRET_KEY!,
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
     },
 
     shippo: {

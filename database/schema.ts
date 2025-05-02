@@ -239,3 +239,42 @@ export const couponRedemptions = pgTable(
     },
   ]
 );
+
+export const orders = pgTable('orders', {
+  id: uuid('id').primaryKey().defaultRandom().notNull().unique(),
+  userId: text('user_id')
+    .references(() => users.id)
+    .notNull(),
+  stripeSessionId: text('stripe_session_id').notNull(),
+  stripePaymentIntentId: text('stripe_payment_intent_id').notNull(),
+  email: text('email').notNull(),
+  firstName: text('firstname').notNull(),
+  lastName: text('lastname').notNull(),
+  phoneNumber: text('phone_number').notNull(),
+  shippingAddress: uuid('shipping_address')
+    .references(() => addresses.id)
+    .notNull(),
+  status: text('status').notNull().default('pending'),
+  totalAmount: integer('total_amount').notNull(),
+  orderedAt: timestamp('ordered_at').defaultNow().notNull(),
+});
+
+export const orderItems = pgTable(
+  'order_items',
+  {
+    orderId: uuid('order_id')
+      .references(() => orders.id)
+      .notNull(),
+    productId: uuid('product_id')
+      .references(() => products.id)
+      .notNull(),
+    quantity: integer('quantity').notNull(),
+  },
+  (orderItems) => [
+    {
+      compositePk: primaryKey({
+        columns: [orderItems.orderId, orderItems.productId],
+      }),
+    },
+  ]
+);
