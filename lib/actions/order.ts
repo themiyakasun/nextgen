@@ -5,11 +5,11 @@ import { addressCreation } from './address';
 import stripe from '../stripe';
 import { db } from '@/database/drizzle';
 import { orderItems, orders } from '@/database/schema';
+import { removeCartItem } from './cart';
 
 export const createOrder = async (session: Stripe.Checkout.Session) => {
   if (session === null || session.metadata === null)
     return 'No session or session metadata is empty';
-
   console.log(session);
 
   const {
@@ -63,13 +63,16 @@ export const createOrder = async (session: Stripe.Checkout.Session) => {
       })
       .returning();
 
-    lineItemsWithProduct.data.map(
-      async (item) =>
-        await db.insert(orderItems).values({
-          orderId: order[0].id,
-          productId: (item.price?.product as Stripe.Product).metadata.id,
-          quantity: item.quantity ?? 0,
-        })
-    );
+    lineItemsWithProduct.data.map(async (item) => {
+      await db.insert(orderItems).values({
+        orderId: order[0].id,
+        productId: (item.price?.product as Stripe.Product).metadata.id,
+        quantity: item.quantity ?? 0,
+      });
+
+      await removeCartItem(
+        (item.price?.product as Stripe.Product).metadata.cartItemId
+      );
+    });
   }
 };

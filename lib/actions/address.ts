@@ -3,6 +3,7 @@
 import shippo from '../shippo';
 import { db } from '@/database/drizzle';
 import { addresses, userAddresses } from '@/database/schema';
+import { and, eq } from 'drizzle-orm';
 
 export const addressCreation = async (addressData: Address, userId: string) => {
   const { state, street, country, city, postalCode } = addressData;
@@ -50,4 +51,32 @@ export const addressCreation = async (addressData: Address, userId: string) => {
 export const addressValidation = async (id: string) => {
   const result = await shippo.addresses.validate(id);
   return result;
+};
+
+export const getUserShippingAddreses = async (userId: string) => {
+  try {
+    const result = await db
+      .select()
+      .from(userAddresses)
+      .where(
+        and(
+          eq(userAddresses.userId, userId),
+          eq(userAddresses.addressType, 'SHIPPING')
+        )
+      );
+
+    const addressDetails = await Promise.all(
+      result.map(async (item) => {
+        const [address] = await db
+          .select()
+          .from(addresses)
+          .where(eq(addresses.id, item.addressId as string));
+        return address;
+      })
+    );
+
+    return addressDetails;
+  } catch (error) {
+    console.log(error);
+  }
 };

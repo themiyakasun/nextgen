@@ -66,6 +66,7 @@ export const createCheckoutSession = async (
 
               metadata: {
                 id: item.product.id,
+                cartItemId: item.cart.id,
               },
             },
           },

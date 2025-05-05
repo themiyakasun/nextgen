@@ -84,6 +84,7 @@ interface CartItem {
 }
 
 interface Address {
+  id?: string;
   firstName: string;
   lastName: string;
   street: string;

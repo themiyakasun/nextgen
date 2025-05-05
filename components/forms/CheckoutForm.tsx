@@ -26,8 +26,9 @@ import { addressSchema } from '@/lib/validation';
 import { Session } from 'next-auth';
 import { createCheckoutSession } from '@/lib/actions/checkout';
 import { useCartStore } from '@/providers/CartStoreProvider';
-import { addressCreation } from '@/lib/actions/address';
 import { countriesAndRegions } from '@/constants';
+import { useEffect, useState } from 'react';
+import { getUserShippingAddreses } from '@/lib/actions/address';
 
 interface Props {
   session: Session | null;
@@ -35,6 +36,17 @@ interface Props {
 
 const CheckoutForm = ({ session }: Props) => {
   const { cartItems } = useCartStore((state) => state);
+  const [addressList, setAddressList] = useState<
+    Omit<Address, 'firstName' | 'lastName' | 'phoneNumber'>[] | null | undefined
+  >(null);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const result = await getUserShippingAddreses(session?.user?.id as string);
+      setAddressList(result);
+    };
+    fetchAddress();
+  }, [session?.user?.id]);
 
   const form = useForm<z.infer<typeof addressSchema>>({
     resolver: zodResolver(addressSchema),
