@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import OrderSummary from '@/components/checkout/OrderSummary';
 import CheckoutForm from '@/components/forms/CheckoutForm';
 import React from 'react';
 
@@ -7,6 +8,7 @@ const page = async () => {
   return (
     <div>
       <CheckoutForm session={session} />
+      <OrderSummary />
     </div>
   );
 };

@@ -25,7 +25,7 @@ const MenuItems = ({ showMenu }: Props) => {
   }, []);
 
   return (
-    <div className='md:static absolute top-27 right-0 left-0 md:shadow-none md:bg-transparent'>
+    <div className='md:static absolute top-27 right-0 left-0 md:shadow-none md:bg-transparent z-20'>
       <div
         className={`transition-all duration-300 ease-in-out overflow-hidden flex flex-col gap-5 md:flex-row md:shadow-none  ${showMenu ? 'max-h-[500px] p-5 bg-white shadow-2xl' : 'max-h-0 p-0 md:max-h-[500px]'} `}
       >

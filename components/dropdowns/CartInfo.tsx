@@ -43,25 +43,34 @@ const CartInfo = ({ show, userId }: Props) => {
       <div className='text-center w-full'>
         <h2 className='sub-title'>My Cart</h2>
         <p className='text-secondary-custom text-xs mt-2'>
-          {cartItems == null || cartItems == undefined ? (
+          {cartItems == null ||
+          cartItems == undefined ||
+          cartItems.length < 1 ? (
             <span>No cart Items</span>
           ) : (
             <span>{cartItems.length} item in cart</span>
           )}
         </p>
-        <div className='w-full mt-2 flex justify-center'>
-          <Button
-            text='View or Edit Your Cart'
-            variant='outline'
-            color='default'
-            link='/cart'
-          />
-        </div>
+
+        {cartItems.length > 0 && (
+          <div className='w-full mt-2 flex justify-center'>
+            <Button
+              text='View or Edit Your Cart'
+              variant='outline'
+              color='default'
+              link='/cart'
+            />
+          </div>
+        )}
       </div>
 
       <div className='mt-5'>
-        {cartItems === null || cartItems === undefined ? (
-          <span>No Cart items, please add products to your cart</span>
+        {cartItems === null ||
+        cartItems === undefined ||
+        cartItems.length < 1 ? (
+          <p className='px-3 text-center'>
+            No Cart items, please add products to your cart
+          </p>
         ) : (
           cartItems.map(
             (cartItem) =>
@@ -77,18 +86,20 @@ const CartInfo = ({ show, userId }: Props) => {
         )}
       </div>
 
-      <div className='text-center mt-5'>
-        <span className='text-sm font-semibold text-secondary-custom'>
-          Sub Total:{' '}
-          <span className='text-lg text-black'>
-            Rs. {total?.toLocaleString()}
+      {cartItems.length > 0 && (
+        <div className='text-center mt-5'>
+          <span className='text-sm font-semibold text-secondary-custom'>
+            Sub Total:{' '}
+            <span className='text-lg text-black'>
+              Rs. {total?.toLocaleString()}
+            </span>
           </span>
-        </span>
 
-        <div className='flex justify-center mt-5'>
-          <Button text='Go to Checkout' variant='primary' color='default' />
+          <div className='flex justify-center mt-5'>
+            <Button text='Go to Checkout' variant='primary' color='default' />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -9,9 +9,10 @@ import { toast } from 'sonner';
 
 type Props = {
   productId: string;
+  stockQuantity: number;
 };
 
-const AddToCart = ({ productId }: Props) => {
+const AddToCart = ({ productId, stockQuantity }: Props) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,8 +30,8 @@ const AddToCart = ({ productId }: Props) => {
       toast.success(
         'Item already in the cart but successfully increased the quantity'
       );
-      window.location.reload();
     }
+    window.location.reload();
   };
 
   return (
@@ -40,7 +41,12 @@ const AddToCart = ({ productId }: Props) => {
         value={quantity}
         className='w-[70px] h-[50px]'
         onChange={(e) => {
-          setQuantity(parseInt(e.target.value));
+          if (
+            parseInt(e.target.value) <= stockQuantity &&
+            parseInt(e.target.value) >= 1
+          ) {
+            setQuantity(parseInt(e.target.value));
+          }
         }}
       />
       <Button text='Add to cart' variant='primary' color='default' />
