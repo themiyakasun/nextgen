@@ -210,3 +210,23 @@ export const getProductImages = async (productId: string) => {
     console.log(error);
   }
 };
+
+export const updateProductStock = async (
+  productId: string,
+  quantity: number
+) => {
+  try {
+    const product = await db
+      .select({ stock: products.stockQuantity })
+      .from(products)
+      .where(eq(products.id, productId))
+      .limit(1);
+
+    await db
+      .update(products)
+      .set({ stockQuantity: product[0].stock - quantity })
+      .where(eq(products.id, productId));
+  } catch (error) {
+    console.log(error);
+  }
+};

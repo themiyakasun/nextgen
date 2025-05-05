@@ -6,6 +6,7 @@ import stripe from '../stripe';
 import { db } from '@/database/drizzle';
 import { orderItems, orders } from '@/database/schema';
 import { removeCartItem } from './cart';
+import { updateProductStock } from './products';
 
 export const createOrder = async (session: Stripe.Checkout.Session) => {
   if (session === null || session.metadata === null)
@@ -67,11 +68,16 @@ export const createOrder = async (session: Stripe.Checkout.Session) => {
       await db.insert(orderItems).values({
         orderId: order[0].id,
         productId: (item.price?.product as Stripe.Product).metadata.id,
-        quantity: item.quantity ?? 0,
+        quantity: item.quantity ?? 1,
       });
 
       await removeCartItem(
         (item.price?.product as Stripe.Product).metadata.cartItemId
+      );
+
+      await updateProductStock(
+        (item.price?.product as Stripe.Product).metadata.id,
+        item.quantity ?? 1
       );
     });
   }
