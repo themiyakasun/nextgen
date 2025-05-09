@@ -230,3 +230,61 @@ export const updateProductStock = async (
     console.log(error);
   }
 };
+
+export const getProductsByCategory = async ({
+  categoryId,
+  pageSize,
+  page,
+}: {
+  categoryId: string;
+  pageSize: number;
+  page: number;
+}) => {
+  try {
+    const productsResult = await db
+      .select()
+      .from(products)
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .where(eq(products.categoryId, categoryId))
+      .orderBy(products.createdAt);
+
+    const productIds = productsResult.map((productResult) => productResult.id);
+
+    const images = await db
+      .select()
+      .from(productImages)
+      .where(inArray(productImages.productId, productIds));
+
+    const specs = await db
+      .select()
+      .from(productSpecifications)
+      .where(inArray(productSpecifications.productId, productIds));
+
+    const brandIds = [
+      ...new Set(productsResult.map((product) => product.brandId)),
+    ];
+
+    const brandDetails = await db
+      .select()
+      .from(brands)
+      .where(inArray(brands.id, brandIds));
+
+    const brandMap = Object.fromEntries(
+      brandDetails.map((brand) => [brand.id, brand])
+    );
+
+    const productDetails = productsResult.map((product) => {
+      return {
+        ...product,
+        images: images.filter((image) => image.productId === product.id),
+        specs: specs.filter((spec) => spec.productId === product.id),
+        brand: brandMap[product.brandId],
+      };
+    });
+
+    return Object.values(productDetails);
+  } catch (error) {
+    console.log(error);
+  }
+};
