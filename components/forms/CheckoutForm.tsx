@@ -77,11 +77,13 @@ const CheckoutForm = ({ session }: Props) => {
 
   return (
     <div className='bg-white md:p-10 p-5 rounded-3xl mt-5'>
-      <h2 className='sub-title mb-4'>Shipping Address</h2>
+      <h2 className='sub-title mb-4 border-b-2 border-color-neutral-custom-500 pb-2'>
+        Shipping Address
+      </h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-6 w-full'
+          className='space-y-6 md:w-2/3 w-full'
         >
           <FormField
             control={form.control}

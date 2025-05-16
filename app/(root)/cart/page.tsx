@@ -7,10 +7,17 @@ const page = async () => {
   const session = await auth();
 
   return (
-    <div>
-      <CartDetails session={session} />
-      <CartSummary session={session} />
-    </div>
+    <>
+      <h2 className='main-title my-5'>Shopping Cart</h2>
+      <div className='md:flex gap-4'>
+        <div className='w-3/4'>
+          <CartDetails session={session} />
+        </div>
+        <div className='w-1/4'>
+          <CartSummary session={session} />
+        </div>
+      </div>
+    </>
   );
 };
 

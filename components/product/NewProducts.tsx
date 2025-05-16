@@ -30,6 +30,7 @@ const NewProducts = () => {
   return (
     <>
       {loader && <Loader />}
+      <h2 className='main-title mb-5'>New Products</h2>
       <div className='flex items-start flex-wrap'>
         {products?.map((product, index) => (
           <ProductCard product={product} key={index} />

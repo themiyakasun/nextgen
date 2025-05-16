@@ -24,8 +24,8 @@ const ProductsByCategory = () => {
   return (
     <div className='mt-10'>
       {categories?.map((category) => (
-        <div key={category.id}>
-          <div className='w-full h-20 mb-5 relative flex items-center justify-center'>
+        <div key={category.id} className='md:flex'>
+          <div className='md:w-1/5 w-full md:h-[350px] h-20 mb-5 relative flex items-center justify-center'>
             <div className='absolute top-0 left-0 bottom-0 right-0'>
               <IKImage
                 urlEndpoint={config.env.imageKit.urlEndpoint}

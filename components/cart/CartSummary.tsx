@@ -62,7 +62,7 @@ const CartSummary = ({ session }: { session: Session | null }) => {
   };
 
   return (
-    <div className='bg-accent-1 md:p-10 p-5 md:mt-0 mt-5 space-y-4'>
+    <div className='bg-accent-1 md:p-10 p-5 md:mt-0 mt-5 space-y-4 w-full'>
       <h2 className='main-title'>Summary</h2>
       <Accordion type='single' collapsible className='w-full'>
         <AccordionItem value='item-1'>

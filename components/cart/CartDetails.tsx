@@ -82,7 +82,7 @@ const CartDetails = ({ session }: { session: Session | null }) => {
       {loading && <Loader />}
       <div className='flex'>
         <table className='cart-table'>
-          <thead>
+          <thead className='md:border-b-2 border-color-neutral-custom-500'>
             <tr>
               <th>Item</th>
               <th>Price</th>
@@ -99,7 +99,10 @@ const CartDetails = ({ session }: { session: Session | null }) => {
                 const price = cartItem.product?.price ?? 0;
 
                 return (
-                  <tr key={cartItem.cart.id}>
+                  <tr
+                    key={cartItem.cart.id}
+                    className='border-b-2 border-color-neutral-custom-500'
+                  >
                     <td>
                       <div className='flex items-center gap-2'>
                         <CartItemImage
