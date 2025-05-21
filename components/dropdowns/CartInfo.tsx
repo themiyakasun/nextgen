@@ -53,7 +53,7 @@ const CartInfo = ({ show, userId }: Props) => {
         </p>
 
         {cartItems.length > 0 && (
-          <div className='w-full mt-2 flex justify-center'>
+          <div className='w-full mt-2 flex justify-center px-5'>
             <Button
               text='View or Edit Your Cart'
               variant='outline'
@@ -95,7 +95,7 @@ const CartInfo = ({ show, userId }: Props) => {
             </span>
           </span>
 
-          <div className='flex justify-center mt-5'>
+          <div className='flex justify-center mt-5 px-5'>
             <Button text='Go to Checkout' variant='primary' color='default' />
           </div>
         </div>

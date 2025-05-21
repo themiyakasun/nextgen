@@ -96,6 +96,50 @@ export const addProduct = async (params: NewProduct) => {
   }
 };
 
+export const getAllProducts = async () => {
+  try {
+    const productsResult = await db.select().from(products);
+
+    const productIds = productsResult.map((productResult) => productResult.id);
+
+    const images = await db
+      .select()
+      .from(productImages)
+      .where(inArray(productImages.productId, productIds));
+
+    const specs = await db
+      .select()
+      .from(productSpecifications)
+      .where(inArray(productSpecifications.productId, productIds));
+
+    const brandIds = [
+      ...new Set(productsResult.map((product) => product.brandId)),
+    ];
+
+    const brandDetails = await db
+      .select()
+      .from(brands)
+      .where(inArray(brands.id, brandIds));
+
+    const brandMap = Object.fromEntries(
+      brandDetails.map((brand) => [brand.id, brand])
+    );
+
+    const productDetails = productsResult.map((product) => {
+      return {
+        ...product,
+        images: images.filter((image) => image.productId === product.id),
+        specs: specs.filter((spec) => spec.productId === product.id),
+        brand: brandMap[product.brandId],
+      };
+    });
+
+    return Object.values(productDetails);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getProducts = async ({
   page,
   pageSize,

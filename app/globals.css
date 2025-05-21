@@ -70,7 +70,7 @@
   }
 
   .root-container {
-    @apply flex flex-1 flex-col px-5 md:px-16;
+    @apply flex flex-1 flex-col px-5 md:px-20;
   }
 }
 

@@ -19,6 +19,7 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import MenuItems from '../MenuItems';
 import CartInfo from '../dropdowns/CartInfo';
 import { getCartTotalByUser } from '@/lib/actions/cart';
+import SearchProducts from '../dropdowns/SearchProducts';
 
 const Navbar = ({ session }: { session: Session | null }) => {
   const [windowWidth, setWindowWidth] = useState(0);
@@ -26,6 +27,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showCartInfo, setShowCartInfo] = useState(false);
   const [cartTotal, setCartTotal] = useState(0);
+  const [search, setSearch] = useState('');
 
   const breakPoint = 768;
 
@@ -110,12 +112,14 @@ const Navbar = ({ session }: { session: Session | null }) => {
       </div>
 
       <div className='flex items-center gap-5'>
-        <div className='hidden md:flex items-center justify-center w-full md:mt-0 mt-2'>
+        <div className='hidden md:flex items-center justify-center w-full md:mt-0 mt-2 relative'>
           <Input
             type='search'
             placeholder={'Search...'}
             className='flex-1 bg-transparent rounded-[25px] h-10 border-2 border-black outline-none !focus:border-none !focus-visible:border-none !focus-visible:ring-0 shadow-none'
+            onChange={(e) => setSearch(e.target.value)}
           />
+          <SearchProducts search={search} />
         </div>
         <button className='md:block hidden'>
           <SearchIcon className='text-black hidden md:block' />
@@ -155,12 +159,14 @@ const Navbar = ({ session }: { session: Session | null }) => {
         </div>
       </div>
 
-      <div className='flex md:hidden items-center justify-center w-full md:mt-0 mt-2'>
+      <div className='flex md:hidden items-center justify-center w-full md:mt-0 mt-2 relative'>
         <Input
           type='search'
           placeholder={'Search...'}
+          onChange={(e) => setSearch(e.target.value)}
           className='flex-1 bg-white rounded-[25px] h-10 focus:border-none shadow-none'
         />
+        <SearchProducts search={search} />
       </div>
     </div>
   );
